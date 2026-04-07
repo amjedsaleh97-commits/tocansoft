@@ -1,1607 +1,2533 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الطوقان للبرمجيات | Touqan Software</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #1e3a5f;
-            --primary-light: #2d5a8e;
-            --accent: #f07b3f;
-            --accent-light: #f5a623;
-            --dark: #0d1b2a;
-            --gray-dark: #1b2838;
-            --gray: #6b7b8d;
-            --light: #e8edf2;
-            --white: #ffffff;
-            --gradient-primary: linear-gradient(135deg, #1e3a5f 0%, #2d5a8e 100%);
-            --gradient-accent: linear-gradient(135deg, #f07b3f 0%, #f5a623 100%);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-            --shadow-md: 0 8px 30px rgba(0,0,0,0.12);
-            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 80px;
-        }
-
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: var(--white);
-            color: var(--gray-dark);
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-
-        /* Navbar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 0;
-            z-index: 1000;
-            padding: 16px 0;
-            transition: var(--transition);
-            background: transparent;
-        }
-
-        .navbar.scrolled {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.08);
-            padding: 10px 0;
-        }
-
-        .nav-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--white);
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled .logo { color: var(--primary); }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--gradient-accent);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--white);
-            box-shadow: 0 4px 15px rgba(240, 123, 63, 0.4);
-        }
-
-        .logo-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--white);
-            line-height: 1.2;
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled .logo-title { color: var(--primary); }
-
-        .logo-subtitle {
-            font-size: 11px;
-            color: rgba(255,255,255,0.7);
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled .logo-subtitle { color: var(--gray); }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: rgba(255,255,255,0.85);
-            font-weight: 500;
-            font-size: 15px;
-            padding: 8px 18px;
-            border-radius: 10px;
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled .nav-links a { color: var(--gray-dark); }
-
-        .nav-links a:hover {
-            background: rgba(255,255,255,0.15);
-            color: var(--white);
-        }
-
-        .navbar.scrolled .nav-links a:hover {
-            background: rgba(30, 58, 95, 0.08);
-            color: var(--primary);
-        }
-
-        .nav-cta {
-            background: var(--gradient-accent) !important;
-            color: var(--white) !important;
-            padding: 10px 28px !important;
-            border-radius: 12px !important;
-            font-weight: 700 !important;
-            box-shadow: 0 4px 15px rgba(240, 123, 63, 0.35);
-        }
-
-        .nav-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(240, 123, 63, 0.45);
-        }
-
-        .mobile-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            cursor: pointer;
-            padding: 8px;
-            border: none;
-            background: transparent;
-        }
-
-        .mobile-toggle span {
-            width: 28px;
-            height: 3px;
-            background: var(--white);
-            border-radius: 3px;
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled .mobile-toggle span { background: var(--gray-dark); }
-
-        /* Mobile Menu */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 300px;
-            height: 100vh;
-            background: var(--dark);
-            z-index: 2000;
-            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 80px 32px 32px;
-        }
-
-        .mobile-menu.active { right: 0; }
-
-        .mobile-menu-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1999;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .mobile-menu-overlay.active {
-            display: block;
-            opacity: 1;
-        }
-
-        .mobile-menu ul { list-style: none; }
-
-        .mobile-menu li {
-            margin-bottom: 8px;
-        }
-
-        .mobile-menu a {
-            display: block;
-            padding: 14px 20px;
-            color: var(--white);
-            text-decoration: none;
-            font-size: 17px;
-            font-weight: 500;
-            border-radius: 12px;
-            transition: var(--transition);
-        }
-
-        .mobile-menu a:hover {
-            background: rgba(240, 123, 63, 0.15);
-            color: var(--accent);
-        }
-
-        .mobile-close {
-            position: absolute;
-            top: 24px;
-            left: 24px;
-            background: none;
-            border: none;
-            color: var(--white);
-            font-size: 28px;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            transition: var(--transition);
-        }
-
-        .mobile-close:hover { background: rgba(255,255,255,0.1); }
-
-        /* Hero */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, #0d1b2a 0%, #1e3a5f 50%, #2d5a8e 100%);
-        }
-
-        .hero-particles {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(240, 123, 63, 0.5);
-            border-radius: 50%;
-            animation: float-particle linear infinite;
-        }
-
-        @keyframes float-particle {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 32px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-            width: 100%;
-            min-height: 100vh;
-            padding-top: 100px;
-            padding-bottom: 60px;
-        }
-
-        .hero-text h1 {
-            font-size: clamp(36px, 5vw, 60px);
-            font-weight: 900;
-            color: var(--white);
-            line-height: 1.2;
-            margin-bottom: 20px;
-        }
-
-        .hero-text .highlight {
-            background: var(--gradient-accent);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(240, 123, 63, 0.15);
-            border: 1px solid rgba(240, 123, 63, 0.3);
-            padding: 8px 20px;
-            border-radius: 50px;
-            color: var(--accent);
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-
-        .hero-text p {
-            font-size: 18px;
-            color: rgba(255,255,255,0.75);
-            line-height: 1.8;
-            margin-bottom: 36px;
-            max-width: 540px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-bottom: 50px;
-        }
-
-        .btn-primary {
-            background: var(--gradient-accent);
-            color: var(--white);
-            padding: 16px 36px;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 8px 30px rgba(240, 123, 63, 0.35);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(240, 123, 63, 0.5);
-        }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            color: var(--white);
-            padding: 16px 36px;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            border: 2px solid rgba(255,255,255,0.2);
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-3px);
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 40px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .hero-stat h3 {
-            font-size: 36px;
-            font-weight: 900;
-            color: var(--accent);
-            line-height: 1;
-        }
-
-        .hero-stat p {
-            font-size: 14px;
-            color: rgba(255,255,255,0.6);
-            margin: 4px 0 0 0;
-        }
-
-        /* Hero Image */
-        .hero-image {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero-image-main {
-            width: 100%;
-            max-width: 520px;
-            border-radius: 24px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
-            animation: float-gentle 6s ease-in-out infinite;
-        }
-
-        @keyframes float-gentle {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .hero-float-card {
-            position: absolute;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 16px 20px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            animation: float-gentle 5s ease-in-out infinite;
-        }
-
-        .hero-float-card:nth-child(2) {
-            top: 20%;
-            left: -30px;
-            animation-delay: -1s;
-        }
-
-        .hero-float-card:nth-child(3) {
-            bottom: 20%;
-            right: -20px;
-            animation-delay: -2.5s;
-        }
-
-        .float-card-icon {
-            width: 44px;
-            height: 44px;
-            background: var(--gradient-accent);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .float-card-text h4 {
-            color: var(--white);
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .float-card-text p {
-            color: rgba(255,255,255,0.7);
-            font-size: 12px;
-            margin: 0;
-        }
-
-        /* Sections */
-        .section {
-            padding: 100px 0;
-        }
-
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 32px;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-
-        .section-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(240, 123, 63, 0.1);
-            border: 1px solid rgba(240, 123, 63, 0.2);
-            padding: 8px 24px;
-            border-radius: 50px;
-            color: var(--accent);
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .section-title {
-            font-size: clamp(28px, 4vw, 42px);
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 16px;
-            line-height: 1.3;
-        }
-
-        .section-desc {
-            font-size: 17px;
-            color: var(--gray);
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        /* About Section */
-        .about-section {
-            background: #f8fafc;
-        }
-
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 64px;
-            align-items: center;
-        }
-
-        .about-image {
-            position: relative;
-        }
-
-        .about-image img {
-            width: 100%;
-            border-radius: 24px;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .about-image-accent {
-            position: absolute;
-            bottom: -20px;
-            right: -20px;
-            width: 200px;
-            height: 200px;
-            background: var(--gradient-accent);
-            border-radius: 24px;
-            z-index: -1;
-            opacity: 0.3;
-        }
-
-        .about-content h2 {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 16px;
-        }
-
-        .about-content p {
-            color: var(--gray);
-            font-size: 16px;
-            margin-bottom: 32px;
-        }
-
-        .about-features {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-
-        .about-feature {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .about-feature-icon {
-            width: 40px;
-            height: 40px;
-            min-width: 40px;
-            background: rgba(240, 123, 63, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            font-size: 18px;
-        }
-
-        .about-feature h4 {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--gray-dark);
-            margin-bottom: 2px;
-        }
-
-        .about-feature p {
-            font-size: 13px;
-            margin: 0;
-        }
-
-        /* Services */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-        }
-
-        .service-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 36px;
-            border: 1px solid rgba(0,0,0,0.06);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gradient-accent);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-            transform-origin: right;
-        }
-
-        .service-card:hover::before { transform: scaleX(1); }
-
-        .service-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .service-icon {
-            width: 64px;
-            height: 64px;
-            background: rgba(240, 123, 63, 0.1);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
-        .service-card h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 12px;
-        }
-
-        .service-card p {
-            color: var(--gray);
-            font-size: 15px;
-        }
-
-        /* Portfolio */
-        .portfolio-section {
-            background: #f8fafc;
-        }
-
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-        }
-
-        .portfolio-card {
-            background: var(--white);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.06);
-            transition: var(--transition);
-        }
-
-        .portfolio-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .portfolio-image {
-            width: 100%;
-            height: 220px;
-            overflow: hidden;
-        }
-
-        .portfolio-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .portfolio-card:hover .portfolio-image img {
-            transform: scale(1.08);
-        }
-
-        .portfolio-info {
-            padding: 24px;
-        }
-
-        .portfolio-tag {
-            display: inline-block;
-            background: rgba(240, 123, 63, 0.1);
-            color: var(--accent);
-            padding: 4px 14px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .portfolio-info h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .portfolio-info p {
-            color: var(--gray);
-            font-size: 14px;
-        }
-
-        /* Stats Section */
-        .stats-section {
-            background: var(--gradient-primary);
-            padding: 80px 0;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 32px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 32px 20px;
-        }
-
-        .stat-number {
-            font-size: 48px;
-            font-weight: 900;
-            color: var(--accent);
-            line-height: 1;
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            color: rgba(255,255,255,0.8);
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        /* Contact */
-        .contact-section {
-            background: #f8fafc;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 64px;
-            align-items: start;
-        }
-
-        .contact-info h3 {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 16px;
-        }
-
-        .contact-info > p {
-            color: var(--gray);
-            margin-bottom: 32px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .contact-item-icon {
-            width: 52px;
-            height: 52px;
-            min-width: 52px;
-            background: rgba(240, 123, 63, 0.1);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-        }
-
-        .contact-item h4 {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 2px;
-        }
-
-        .contact-item p {
-            color: var(--gray);
-            font-size: 14px;
-        }
-
-        .contact-form {
-            background: var(--white);
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-dark);
-            margin-bottom: 8px;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 14px 18px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: 'Tajawal', sans-serif;
-            transition: var(--transition);
-            background: #f8fafc;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: var(--white);
-            box-shadow: 0 0 0 4px rgba(240, 123, 63, 0.1);
-        }
-
-        .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background: var(--gradient-accent);
-            color: var(--white);
-            border: none;
-            border-radius: 14px;
-            font-size: 17px;
-            font-weight: 700;
-            font-family: 'Tajawal', sans-serif;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 8px 30px rgba(240, 123, 63, 0.3);
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(240, 123, 63, 0.4);
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--dark);
-            color: rgba(255,255,255,0.7);
-            padding: 80px 0 32px;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 48px;
-            margin-bottom: 48px;
-        }
-
-        .footer-about .logo {
-            margin-bottom: 20px;
-        }
-
-        .footer-about p {
-            font-size: 15px;
-            line-height: 1.8;
-        }
-
-        .footer h4 {
-            color: var(--white);
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            font-size: 15px;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--accent);
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .footer-social a {
-            width: 42px;
-            height: 42px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-size: 18px;
-            transition: var(--transition);
-        }
-
-        .footer-social a:hover {
-            background: var(--accent);
-            color: var(--white);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.08);
-            padding-top: 32px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        /* Scroll animations */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .hero-content { grid-template-columns: 1fr; text-align: center; }
-            .hero-text p { margin: 0 auto 36px; }
-            .hero-buttons { justify-content: center; }
-            .hero-stats { justify-content: center; }
-            .hero-image { display: none; }
-            .about-grid { grid-template-columns: 1fr; }
-            .services-grid { grid-template-columns: repeat(2, 1fr); }
-            .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .contact-grid { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: 1fr 1fr; }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .mobile-toggle { display: flex; }
-            .mobile-menu { display: block; }
-            .services-grid { grid-template-columns: 1fr; }
-            .portfolio-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .form-row { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: 1fr; }
-            .hero-stats { flex-wrap: wrap; gap: 24px; }
-            .about-features { grid-template-columns: 1fr; }
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 32px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--primary);
-            color: var(--white);
-            padding: 16px 32px;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: 600;
-            box-shadow: var(--shadow-lg);
-            z-index: 5000;
-            transition: transform 0.4s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Scroll to top */
-        .scroll-top {
-            position: fixed;
-            bottom: 32px;
-            left: 32px;
-            width: 52px;
-            height: 52px;
-            background: var(--gradient-accent);
-            color: var(--white);
-            border: none;
-            border-radius: 14px;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 8px 30px rgba(240, 123, 63, 0.4);
-            transition: var(--transition);
-            opacity: 0;
-            visibility: hidden;
-            z-index: 999;
-        }
-
-        .scroll-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .scroll-top:hover {
-            transform: translateY(-4px);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام نقاط البيع - POS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #F57C00;
+  --primary-light: #FFB74D;
+  --primary-dark: #E65100;
+  --primary-bg: #FFF3E0;
+  --green: #4CAF50;
+  --green-light: #81C784;
+  --green-dark: #388E3C;
+  --green-bg: #E8F5E9;
+  --red: #E53935;
+  --red-bg: #FFEBEE;
+  --blue: #1E88E5;
+  --blue-bg: #E3F2FD;
+  --purple: #7E57C2;
+  --purple-bg: #EDE7F6;
+  --teal: #009688;
+  --gray-50: #FAFAFA;
+  --gray-100: #F5F5F5;
+  --gray-200: #EEEEEE;
+  --gray-300: #E0E0E0;
+  --gray-400: #BDBDBD;
+  --gray-500: #9E9E9E;
+  --gray-600: #757575;
+  --gray-700: #616161;
+  --gray-800: #424242;
+  --gray-900: #212121;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-xl: 0 12px 32px rgba(0,0,0,0.15);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--gray-100);
+  color: var(--gray-900);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+  color: white;
+  padding: 0 20px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.header-right { display: flex; align-items: center; gap: 12px; }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.logo svg { width: 28px; height: 28px; }
+
+.header-center { display: flex; align-items: center; gap: 10px; }
+
+.header-badge {
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.header-left { display: flex; align-items: center; gap: 10px; }
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.15);
+  padding: 4px 12px 4px 4px;
+  border-radius: 20px;
+}
+
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.user-name { font-size: 12px; font-weight: 600; }
+.user-role { font-size: 9px; opacity: 0.85; }
+
+.datetime { text-align: left; font-size: 10px; opacity: 0.9; }
+.datetime .time { font-size: 14px; font-weight: 700; }
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  padding: 10px;
+  gap: 10px;
+  min-height: 0;
+}
+
+/* Left Panel */
+.left-panel {
+  flex: 7;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Barcode Section */
+.barcode-section {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 10px 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.barcode-section:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(245, 124, 0, 0.12);
+}
+
+.barcode-icon {
+  width: 38px;
+  height: 38px;
+  background: var(--primary-bg);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.barcode-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray-900);
+  background: transparent;
+  direction: ltr;
+  text-align: right;
+}
+
+.barcode-input::placeholder { color: var(--gray-400); font-weight: 400; }
+
+.barcode-status {
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.barcode-status.ready { background: var(--green-bg); color: var(--green-dark); }
+.barcode-status.scanning { background: var(--primary-bg); color: var(--primary-dark); }
+
+.shortcut-hint {
+  background: var(--gray-100);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  color: var(--gray-500);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.open-products-btn {
+  padding: 8px 16px;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.open-products-btn:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Quick Items Bar */
+.quick-items-bar {
+  flex-shrink: 0;
+  overflow-x: auto;
+  padding: 2px 0;
+}
+
+.quick-items-bar::-webkit-scrollbar { height: 3px; }
+.quick-items-bar::-webkit-scrollbar-track { background: transparent; }
+.quick-items-bar::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+
+.quick-items-grid { display: flex; gap: 6px; padding: 2px 0; }
+
+.quick-item-btn {
+  min-width: 88px;
+  flex-shrink: 0;
+  padding: 8px 6px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: white;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-item-btn:hover {
+  border-color: var(--primary);
+  background: var(--primary-bg);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.quick-item-btn:active { transform: translateY(0) scale(0.96); }
+
+.quick-item-btn .emoji { font-size: 22px; line-height: 1; }
+
+.quick-item-btn .name {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gray-700);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quick-item-btn .price { font-size: 9px; color: var(--primary-dark); font-weight: 600; direction: ltr; }
+
+.quick-item-btn .key {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  background: var(--gray-200);
+  color: var(--gray-600);
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.quick-item-btn:hover .key { background: var(--primary); color: white; }
+
+/* Product Table */
+.table-section {
+  flex: 1;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.table-header {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--gray-200);
+  flex-shrink: 0;
+}
+
+.table-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-800);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.table-count {
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.table-actions { display: flex; gap: 4px; }
+
+.table-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.table-btn.primary { background: var(--primary); color: white; }
+.table-btn.primary:hover { background: var(--primary-dark); }
+.table-btn.danger { background: var(--red-bg); color: var(--red-dark); }
+.table-btn.danger:hover { background: var(--red); color: white; }
+.table-btn.secondary { background: var(--gray-100); color: var(--gray-700); }
+.table-btn.secondary:hover { background: var(--gray-200); }
+
+.table-wrapper { flex: 1; overflow-y: auto; min-height: 0; }
+.table-wrapper::-webkit-scrollbar { width: 5px; }
+.table-wrapper::-webkit-scrollbar-track { background: transparent; }
+.table-wrapper::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+
+.product-table { width: 100%; border-collapse: collapse; }
+.product-table thead { position: sticky; top: 0; z-index: 10; }
+
+.product-table th {
+  background: var(--gray-50);
+  padding: 8px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gray-600);
+  text-align: right;
+  border-bottom: 2px solid var(--gray-200);
+  white-space: nowrap;
+}
+
+.product-table td {
+  padding: 10px 12px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--gray-100);
+  vertical-align: middle;
+}
+
+.product-table tbody tr { transition: all 0.2s; cursor: pointer; }
+.product-table tbody tr:hover { background: var(--primary-bg); }
+.product-table tbody tr.selected { background: rgba(245, 124, 0, 0.08); border-right: 3px solid var(--primary); }
+.product-table tbody tr.scanned { animation: scanFlash 0.5s ease; }
+
+@keyframes scanFlash {
+  0%, 100% { background: white; }
+  30%, 70% { background: var(--green-bg); }
+}
+
+.product-name-cell { display: flex; align-items: center; gap: 8px; }
+
+.product-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.product-name-info { display: flex; flex-direction: column; }
+.product-name { font-weight: 600; color: var(--gray-800); font-size: 12px; }
+.product-code { font-size: 9px; color: var(--gray-400); direction: ltr; text-align: right; }
+
+.qty-control { display: flex; align-items: center; gap: 2px; }
+
+.qty-btn {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-600);
+  transition: all 0.15s;
+}
+
+.qty-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+.qty-btn.minus:hover { background: var(--red); border-color: var(--red); }
+
+.qty-input {
+  width: 40px;
+  text-align: center;
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  padding: 3px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  outline: none;
+}
+
+.qty-input:focus { border-color: var(--primary); }
+
+.price-cell { font-weight: 600; color: var(--gray-700); direction: ltr; text-align: right; }
+.discount-cell { direction: ltr; text-align: right; }
+
+.discount-input {
+  width: 56px;
+  text-align: center;
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  padding: 3px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  outline: none;
+}
+
+.discount-input:focus { border-color: var(--primary); }
+
+.total-cell { font-weight: 800; color: var(--primary-dark); font-size: 13px; direction: ltr; text-align: right; }
+
+.remove-btn {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 6px;
+  background: var(--red-bg);
+  color: var(--red);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.remove-btn:hover { background: var(--red); color: white; transform: scale(1.1); }
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  gap: 10px;
+  padding: 20px;
+}
+
+.empty-state svg { width: 70px; height: 70px; opacity: 0.35; }
+.empty-state p { font-size: 14px; font-weight: 600; }
+.empty-state .hint { font-size: 11px; color: var(--gray-400); }
+
+/* Right Panel */
+.right-panel {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Invoice Card */
+.invoice-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.invoice-card-header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.invoice-card-title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+
+.invoice-number {
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.invoice-body { padding: 12px 14px; }
+
+.invoice-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--gray-200);
+}
+
+.invoice-row:last-child { border-bottom: none; }
+.invoice-label { font-size: 12px; color: var(--gray-600); display: flex; align-items: center; gap: 4px; }
+.invoice-value { font-size: 12px; font-weight: 600; color: var(--gray-800); direction: ltr; }
+.invoice-row.discount .invoice-value { color: var(--red); }
+
+.invoice-divider {
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  margin: 4px 0;
+  border-radius: 1px;
+}
+
+.invoice-total-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0 4px; }
+.invoice-total-label { font-size: 14px; font-weight: 800; color: var(--gray-800); }
+
+.invoice-total-value {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--green-dark);
+  direction: ltr;
+  line-height: 1;
+}
+
+.invoice-total-currency { font-size: 11px; font-weight: 600; color: var(--green); margin-right: 2px; }
+
+/* Customer Card */
+.customer-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.customer-card-header {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.customer-card-title { font-size: 12px; font-weight: 700; color: var(--gray-700); display: flex; align-items: center; gap: 5px; }
+
+.add-customer-btn {
+  padding: 4px 8px;
+  border: 1px dashed var(--primary);
+  border-radius: var(--radius-sm);
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+  cursor: pointer;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.2s;
+}
+
+.add-customer-btn:hover { background: var(--primary); color: white; border-style: solid; }
+
+.customer-card-body { padding: 10px 14px; }
+
+.customer-search { position: relative; margin-bottom: 8px; }
+
+.customer-search input {
+  width: 100%;
+  padding: 7px 10px 7px 32px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 11px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.customer-search input:focus { border-color: var(--primary); }
+.customer-search svg { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--gray-400); }
+
+.customer-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.customer-dropdown:hover { border-color: var(--primary); background: var(--primary-bg); }
+.customer-info { display: flex; align-items: center; gap: 6px; }
+
+.customer-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.customer-details h4 { font-size: 12px; font-weight: 600; color: var(--gray-800); }
+.customer-details span { font-size: 9px; color: var(--gray-500); }
+
+.customer-balance { text-align: left; }
+.customer-balance .label { font-size: 8px; color: var(--gray-500); }
+.customer-balance .amount { font-size: 11px; font-weight: 700; color: var(--green-dark); direction: ltr; }
+
+/* Compact Payment Section */
+.payment-section {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-header {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--gray-200);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray-700);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.payment-methods-row {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  flex-shrink: 0;
+}
+
+.pay-method-btn {
+  flex: 1;
+  padding: 10px 6px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: white;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  transition: all 0.2s;
+  font-family: 'Tajawal', sans-serif;
+}
+
+.pay-method-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+.pay-method-btn.cash { border-color: var(--green-light); color: var(--green-dark); }
+.pay-method-btn.cash:hover, .pay-method-btn.cash.active { background: var(--green-bg); border-color: var(--green); }
+
+.pay-method-btn.card { border-color: var(--blue-light); color: var(--blue); }
+.pay-method-btn.card:hover, .pay-method-btn.card.active { background: var(--blue-bg); border-color: var(--blue); }
+
+.pay-method-btn.transfer { border-color: var(--purple); color: var(--purple); }
+.pay-method-btn.transfer:hover, .pay-method-btn.transfer.active { background: var(--purple-bg); border-color: var(--purple); }
+
+.pay-method-btn.multi { border-color: var(--primary-light); color: var(--primary-dark); }
+.pay-method-btn.multi:hover, .pay-method-btn.multi.active { background: var(--primary-bg); border-color: var(--primary); }
+
+.pay-method-btn svg { width: 22px; height: 22px; }
+.pay-method-btn span { font-size: 11px; font-weight: 700; }
+.pay-method-btn .sub { font-size: 8px; font-weight: 400; opacity: 0.6; }
+
+.payment-info {
+  padding: 8px 14px;
+  border-top: 1px solid var(--gray-200);
+  flex-shrink: 0;
+}
+
+.payment-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+}
+
+.payment-info-label { font-size: 11px; color: var(--gray-500); }
+.payment-info-value { font-size: 11px; font-weight: 700; color: var(--gray-700); direction: ltr; }
+
+/* Bottom Bar */
+.bottom-bar {
+  background: white;
+  border-top: 2px solid var(--gray-200);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.action-group { display: flex; align-items: center; gap: 4px; }
+
+.action-divider { width: 1px; height: 32px; background: var(--gray-300); margin: 0 4px; }
+
+.action-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.25s;
+  white-space: nowrap;
+  position: relative;
+}
+
+.action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+.action-btn .shortcut {
+  position: absolute;
+  top: 1px;
+  right: 3px;
+  font-size: 7px;
+  opacity: 0.6;
+  background: rgba(0,0,0,0.05);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
+.action-btn:hover { transform: translateY(-2px); }
+.action-btn:active { transform: translateY(0); }
+
+.action-btn.management { background: var(--gray-100); color: var(--gray-700); }
+.action-btn.management:hover { background: var(--gray-200); }
+
+.action-btn.danger-action { background: var(--red-bg); color: var(--red-dark); }
+.action-btn.danger-action:hover { background: var(--red); color: white; }
+
+.action-btn.quick-pay { background: var(--green-bg); color: var(--green-dark); }
+.action-btn.quick-pay:hover { background: var(--green); color: white; }
+
+.action-btn.pay {
+  background: linear-gradient(135deg, var(--green-dark), var(--green), var(--green-light));
+  color: white;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.35);
+}
+
+.action-btn.pay:hover {
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.toast {
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+  min-width: 220px;
+  pointer-events: auto;
+}
+
+.toast.success { border-right: 4px solid var(--green); }
+.toast.error { border-right: 4px solid var(--red); }
+.toast.info { border-right: 4px solid var(--blue); }
+
+@keyframes toastIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-12px); } }
+
+/* Products Modal */
+.products-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.products-modal-overlay.active { opacity: 1; visibility: visible; }
+
+.products-modal {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  width: 92%;
+  max-width: 860px;
+  height: 82vh;
+  max-height: 660px;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(20px) scale(0.96);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.products-modal-overlay.active .products-modal { transform: translateY(0) scale(1); }
+
+.products-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.products-modal-title { font-size: 16px; font-weight: 800; color: var(--gray-800); display: flex; align-items: center; gap: 8px; }
+
+.products-modal-close {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: var(--gray-100);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.products-modal-close:hover { background: var(--red-bg); color: var(--red); }
+
+.products-search-bar { padding: 12px 20px; background: var(--gray-50); border-bottom: 1px solid var(--gray-200); flex-shrink: 0; }
+
+.products-search-input {
+  width: 100%;
+  padding: 10px 14px 10px 40px;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  background: white;
+  transition: all 0.2s;
+  direction: ltr;
+  text-align: right;
+}
+
+.products-search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(245, 124, 0, 0.1); }
+
+.products-search-wrapper { flex: 1; position: relative; }
+
+.products-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+}
+
+.category-filters {
+  display: flex;
+  gap: 5px;
+  padding: 10px 20px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.category-filters::-webkit-scrollbar { height: 3px; }
+.category-filters::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+
+.category-btn {
+  padding: 6px 14px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 18px;
+  background: white;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  color: var(--gray-600);
+}
+
+.category-btn:hover { border-color: var(--primary); color: var(--primary-dark); background: var(--primary-bg); }
+.category-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+.products-grid-wrapper { flex: 1; overflow-y: auto; padding: 14px 20px; }
+.products-grid-wrapper::-webkit-scrollbar { width: 5px; }
+.products-grid-wrapper::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.product-card {
+  background: white;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  padding: 14px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s;
+  position: relative;
+}
+
+.product-card:hover {
+  border-color: var(--primary);
+  background: var(--primary-bg);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.product-card:active { transform: translateY(0) scale(0.97); }
+.product-card .emoji { font-size: 32px; line-height: 1; }
+.product-card .name { font-size: 12px; font-weight: 700; color: var(--gray-800); text-align: center; line-height: 1.3; }
+.product-card .price { font-size: 14px; font-weight: 800; color: var(--primary-dark); direction: ltr; }
+
+.product-card .category-tag {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 8px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: var(--gray-100);
+  color: var(--gray-500);
+  font-weight: 600;
+}
+
+.product-card .code { font-size: 9px; color: var(--gray-400); direction: ltr; }
+
+.products-footer {
+  padding: 10px 20px;
+  border-top: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  background: var(--gray-50);
+}
+
+.products-count { font-size: 12px; color: var(--gray-600); font-weight: 600; }
+.products-hint { font-size: 10px; color: var(--gray-400); }
+
+/* Add Customer Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.active { opacity: 1; visibility: visible; }
+
+.modal {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  width: 90%;
+  max-width: 420px;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.modal-overlay.active .modal { transform: translateY(0) scale(1); }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-between; }
+.modal-title { font-size: 16px; font-weight: 700; }
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: var(--gray-100);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.modal-close:hover { background: var(--red-bg); color: var(--red); }
+
+.modal-body { padding: 18px 20px; }
+.form-group { margin-bottom: 12px; }
+.form-label { display: block; font-size: 11px; font-weight: 600; color: var(--gray-600); margin-bottom: 4px; }
+
+.form-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(245, 124, 0, 0.1); }
+
+.modal-footer { padding: 12px 20px; border-top: 1px solid var(--gray-200); display: flex; gap: 6px; }
+.modal-btn { padding: 8px 18px; border: none; border-radius: var(--radius-sm); font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.modal-btn.primary { background: var(--primary); color: white; }
+.modal-btn.primary:hover { background: var(--primary-dark); }
+.modal-btn.secondary { background: var(--gray-100); color: var(--gray-600); }
+.modal-btn.secondary:hover { background: var(--gray-200); }
+
+/* Success Modal */
+.success-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2500;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.success-modal-overlay.active { opacity: 1; visibility: visible; }
+
+.success-modal-box {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  width: 90%;
+  max-width: 380px;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  text-align: center;
+}
+
+.success-modal-overlay.active .success-modal-box { transform: translateY(0) scale(1); }
+
+.success-icon-big {
+  width: 80px;
+  height: 80px;
+  background: var(--green-bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 24px auto 14px;
+}
+
+.success-icon-big svg { width: 40px; height: 40px; color: var(--green); }
+.success-modal-box h2 { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+.success-modal-box p { color: var(--gray-600); font-size: 13px; }
+
+.success-amount {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--green-dark);
+  direction: ltr;
+  margin: 14px 0 4px;
+}
+
+.success-modal-box .inv-num { font-size: 11px; color: var(--gray-400); }
+.success-modal-footer { padding: 16px; border-top: 1px solid var(--gray-200); }
+
+.success-modal-btn {
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--green);
+  color: white;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.success-modal-btn:hover { background: var(--green-dark); }
+
+/* Payment Modal */
+.payment-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2500;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.payment-modal-overlay.active { opacity: 1; visibility: visible; }
+
+.payment-modal {
+  background: #f0f0f0;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  width: 95%;
+  max-width: 920px;
+  height: 88vh;
+  max-height: 680px;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(20px) scale(0.96);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.payment-modal-overlay.active .payment-modal { transform: translateY(0) scale(1); }
+
+.payment-modal-header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.payment-modal-title { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+
+.payment-modal-close {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.payment-modal-close:hover { background: rgba(255,255,255,0.3); }
+
+.payment-modal-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Left side - Bills & Coins */
+.payment-currency-side {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  border-left: 2px solid var(--gray-200);
+}
+
+.payment-currency-side::-webkit-scrollbar { width: 4px; }
+.payment-currency-side::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+
+.currency-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gray-600);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.bill-btn {
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  background: white;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  gap: 8px;
+}
+
+.bill-btn:hover {
+  border-color: var(--green);
+  background: var(--green-bg);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.bill-btn:active { transform: translateY(0) scale(0.97); }
+
+.bill-img {
+  width: 100%;
+  max-width: 120px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.bill-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.bill-value {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--gray-800);
+}
+
+.bill-label {
+  font-size: 10px;
+  color: var(--gray-500);
+}
+
+.coins-grid {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.coin-btn {
+  border: 2px solid var(--gray-200);
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  overflow: hidden;
+  position: relative;
+}
+
+.coin-btn:hover {
+  border-color: var(--green);
+  background: var(--green-bg);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+.coin-btn:active { transform: translateY(0) scale(0.95); }
+
+.coin-img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.coin-label {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: var(--green);
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 8px;
+}
+
+.exact-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--gray-800);
+  color: white;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  align-self: center;
+  margin-top: auto;
+}
+
+.exact-btn:hover { background: var(--gray-900); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.exact-btn svg { width: 20px; height: 20px; }
+
+/* Right side - Payment Details */
+.payment-details-side {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.payment-total-section {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.payment-total-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 8px;
+}
+
+.payment-total-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-md);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gray-900);
+  outline: none;
+  direction: ltr;
+  text-align: left;
+  background: var(--primary-bg);
+}
+
+.payment-total-input:focus { box-shadow: 0 0 0 4px rgba(245, 124, 0, 0.15); }
+
+.payment-summary-section {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  flex: 1;
+}
+
+.payment-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.payment-summary-row:last-child { border-bottom: none; }
+
+.payment-summary-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+.payment-summary-value {
+  font-size: 18px;
+  font-weight: 800;
+  direction: ltr;
+}
+
+.payment-summary-value.paid { color: var(--green-dark); }
+.payment-summary-value.remaining { color: var(--red); }
+.payment-summary-value.change { color: var(--green-dark); }
+
+.payment-method-select {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.pay-method-option {
+  flex: 1;
+  padding: 8px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: white;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.pay-method-option:hover { border-color: var(--primary); }
+.pay-method-option.active { border-color: var(--primary); background: var(--primary-bg); color: var(--primary-dark); }
+
+.payment-modal-footer {
+  padding: 14px 20px;
+  display: flex;
+  gap: 8px;
+  border-top: 2px solid var(--gray-200);
+  flex-shrink: 0;
+  background: white;
+}
+
+.pay-modal-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.pay-modal-btn.save {
+  background: var(--green);
+  color: white;
+  flex: 1;
+}
+
+.pay-modal-btn.save:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+.pay-modal-btn.close {
+  background: var(--gray-700);
+  color: white;
+}
+
+.pay-modal-btn.close:hover { background: var(--gray-800); }
+
+.pay-modal-btn svg { width: 18px; height: 18px; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  z-index: 150;
+  display: none;
+  backdrop-filter: blur(4px);
+  max-width: 560px;
+}
+
+.keyboard-hint.show { display: block; animation: toastIn 0.3s ease; }
+.keyboard-hint table { border-collapse: collapse; width: 100%; }
+.keyboard-hint td { padding: 3px 8px; font-size: 11px; }
+.keyboard-hint kbd {
+  background: rgba(255,255,255,0.2);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 10px;
+  margin: 0 2px;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 124, 0, 0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(245, 124, 0, 0); }
+}
+
+.barcode-section.scanning { animation: pulse 0.8s ease infinite; }
+
+@keyframes qtyBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.qty-bounce { animation: qtyBounce 0.25s ease; }
+</style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <a href="#home" class="logo">
-                <div class="logo-icon">ط</div>
-                <div>
-                    <div class="logo-title">الطوقان</div>
-                    <div class="logo-subtitle">للبرمجيات</div>
-                </div>
-            </a>
-            <ul class="nav-links">
-                <li><a href="#home">الرئيسية</a></li>
-                <li><a href="#about">من نحن</a></li>
-                <li><a href="#services">خدماتنا</a></li>
-                <li><a href="#portfolio">أعمالنا</a></li>
-                <li><a href="#contact">تواصل معنا</a></li>
-                <li><a href="#contact" class="nav-cta">ابدأ مشروعك</a></li>
-            </ul>
-            <button class="mobile-toggle" id="menuToggle" aria-label="القائمة">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </nav>
+<!-- Header -->
+<header class="header">
+  <div class="header-right">
+    <div class="logo">
+      <svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="8" fill="rgba(255,255,255,0.2)"/><path d="M8 12h20M8 18h14M8 24h18" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="28" cy="18" r="5" fill="rgba(255,255,255,0.3)" stroke="white" stroke-width="2"/></svg>
+      <span>نقطة البيع</span>
+    </div>
+  </div>
+  <div class="header-center">
+    <div class="header-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/></svg> فاتورة بيع</div>
+    <div class="header-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span id="headerTime">00:00:00</span></div>
+    <div class="header-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span id="headerDateText">--</span></div>
+  </div>
+  <div class="header-left">
+    <button onclick="toggleKeyboardHints()" style="background:rgba(255,255,255,0.15); border:none; color:white; padding:4px 10px; border-radius:14px; cursor:pointer; font-family:'Tajawal'; font-size:10px; font-weight:600; display:flex; align-items:center; gap:4px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01"/></svg>
+      اختصارات
+    </button>
+    <div class="user-info">
+      <div class="user-avatar">أح</div>
+      <div><div class="user-name">أحمد محمد</div><div class="user-role">كاشير</div></div>
+    </div>
+  </div>
+</header>
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu-overlay" id="menuOverlay"></div>
-    <div class="mobile-menu" id="mobileMenu">
-        <button class="mobile-close" id="menuClose">✕</button>
-        <ul>
-            <li><a href="#home" class="mobile-link">الرئيسية</a></li>
-            <li><a href="#about" class="mobile-link">من نحن</a></li>
-            <li><a href="#services" class="mobile-link">خدماتنا</a></li>
-            <li><a href="#portfolio" class="mobile-link">أعمالنا</a></li>
-            <li><a href="#contact" class="mobile-link">تواصل معنا</a></li>
-        </ul>
+<!-- Keyboard Hints -->
+<div class="keyboard-hint" id="keyboardHint">
+  <table>
+    <tr><td><kbd>Num 1-0</kbd></td><td>إضافة منتج سريع</td><td><kbd>F1</kbd></td><td>شاشة الأصناف</td></tr>
+    <tr><td><kbd>F2</kbd></td><td>تركيز الباركود</td><td><kbd>F4</kbd></td><td>مسح الفاتورة</td></tr>
+    <tr><td><kbd>F6</kbd></td><td>دفع نقدي</td><td><kbd>F12</kbd></td><td>دفع سريع</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>إغلاق النوافذ</td><td><kbd>Enter</kbd></td><td>بحث/إضافة</td></tr>
+  </table>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="left-panel">
+    <!-- Barcode -->
+    <div class="barcode-section" id="barcodeSection">
+      <div class="barcode-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F57C00" stroke-width="2" stroke-linecap="round">
+          <rect x="3" y="3" width="4" height="18" rx="1"/><rect x="9" y="3" width="2" height="18" rx="0.5"/><rect x="13" y="3" width="3" height="18" rx="0.5"/><rect x="18" y="3" width="3" height="18" rx="1"/>
+        </svg>
+      </div>
+      <input type="text" class="barcode-input" id="barcodeInput" placeholder="امسح الباركود أو أدخل رقم المنتج..." autocomplete="off">
+      <span class="barcode-status ready" id="barcodeStatus">جاهز</span>
+      <span class="shortcut-hint">F2</span>
+      <button class="open-products-btn" onclick="openProductsModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        الأصناف
+        <span class="shortcut-hint">F1</span>
+      </button>
     </div>
 
-    <!-- Hero -->
-    <section class="hero" id="home">
-        <div class="hero-particles" id="particles"></div>
-        <div class="hero-content">
-            <div class="hero-text">
-                <div class="hero-badge">✨ نبتكر الحلول الرقمية المتقدمة</div>
-                <h1>
-                    نحول أفكارك إلى<br>
-                    <span class="highlight">حلول رقمية متكاملة</span>
-                </h1>
-                <p>نقدم حلولاً برمجية متكاملة ومبتكرة تساعد الشركات على النمو والتطور في العصر الرقمي. من تطوير المواقع والتطبيقات إلى الذكاء الاصطناعي.</p>
-                <div class="hero-buttons">
-                    <a href="#contact" class="btn-primary">ابدأ مشروعك الآن ←</a>
-                    <a href="#portfolio" class="btn-secondary">شاهد أعمالنا ▶</a>
-                </div>
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <h3>+150</h3>
-                        <p>مشروع مكتمل</p>
-                    </div>
-                    <div class="hero-stat">
-                        <h3>+50</h3>
-                        <p>عميل سعيد</p>
-                    </div>
-                    <div class="hero-stat">
-                        <h3>+8</h3>
-                        <p>سنوات خبرة</p>
-                    </div>
-                    <div class="hero-stat">
-                        <h3>24/7</h3>
-                        <p>دعم فني</p>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 400'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231e3a5f'/%3E%3Cstop offset='100%25' style='stop-color:%232d5a8e'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f07b3f'/%3E%3Cstop offset='100%25' style='stop-color:%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g1)' width='500' height='400' rx='24'/%3E%3Crect x='30' y='30' width='440' height='60' rx='12' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='55' cy='60' r='12' fill='%23f07b3f'/%3E%3Ccircle cx='90' cy='60' r='12' fill='%23f5a623'/%3E%3Ccircle cx='125' cy='60' r='12' fill='%234ade80'/%3E%3Crect x='30' y='120' width='200' height='250' rx='12' fill='rgba(255,255,255,0.05)'/%3E%3Crect x='45' y='140' width='170' height='15' rx='8' fill='rgba(255,255,255,0.1)'/%3E%3Crect x='45' y='170' width='140' height='10' rx='5' fill='rgba(255,255,255,0.06)'/%3E%3Crect x='45' y='195' width='155' height='10' rx='5' fill='rgba(255,255,255,0.06)'/%3E%3Crect x='45' y='220' width='130' height='10' rx='5' fill='rgba(255,255,255,0.06)'/%3E%3Crect x='45' y='250' width='170' height='40' rx='10' fill='url(%23g2)'/%3E%3Crect x='250' y='120' width='220' height='120' rx='12' fill='rgba(255,255,255,0.05)'/%3E%3Crect x='270' y='140' width='180' height='10' rx='5' fill='rgba(255,255,255,0.1)'/%3E%3Crect x='270' y='165' width='100' height='10' rx='5' fill='rgba(240,123,63,0.3)'/%3E%3Crect x='385' y='165' width='65' height='10' rx='5' fill='rgba(74,222,128,0.3)'/%3E%3Crect x='270' y='200' width='180' height='20' rx='6' fill='rgba(255,255,255,0.04)'/%3E%3Crect x='250' y='260' width='220' height='110' rx='12' fill='rgba(255,255,255,0.05)'/%3E%3Crect x='270' y='280' width='180' height='70' rx='8' fill='rgba(240,123,63,0.15)'/%3E%3C/svg%3E" alt="الطوقان للبرمجيات" class="hero-image-main">
-                <div class="hero-float-card">
-                    <div class="float-card-icon">🚀</div>
-                    <div class="float-card-text">
-                        <h4>أداء عالي</h4>
-                        <p>سرعة تحميل خارقة</p>
-                    </div>
-                </div>
-                <div class="hero-float-card">
-                    <div class="float-card-icon">🔒</div>
-                    <div class="float-card-text">
-                        <h4>حماية متقدمة</h4>
-                        <p>أمان على أعلى مستوى</p>
-                    </div>
-                </div>
-            </div>
+    <!-- Quick Items -->
+    <div class="quick-items-bar">
+      <div class="quick-items-grid" id="quickItemsGrid"></div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-section">
+      <div class="table-header">
+        <div class="table-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F57C00" stroke-width="2" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+          عناصر الفاتورة
+          <span class="table-count" id="itemCount">0</span>
         </div>
-    </section>
-
-    <!-- About -->
-    <section class="section about-section" id="about">
-        <div class="container">
-            <div class="about-grid">
-                <div class="about-image fade-up">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 400'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f07b3f'/%3E%3Cstop offset='100%25' style='stop-color:%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='%23f8fafc' width='500' height='400' rx='24'/%3E%3Crect x='40' y='40' width='420' height='320' rx='16' fill='%23ffffff' stroke='%23e2e8f0' stroke-width='2'/%3E%3Ccircle cx='150' cy='150' r='40' fill='url(%23bg)' opacity='0.8'/%3E%3Ccircle cx='250' cy='120' r='30' fill='%231e3a5f' opacity='0.6'/%3E%3Ccircle cx='340' cy='160' r='35' fill='%23f5a623' opacity='0.7'/%3E%3Ccircle cx='200' cy='220' r='25' fill='%232d5a8e' opacity='0.5'/%3E%3Ccircle cx='310' cy='240' r='28' fill='%23f07b3f' opacity='0.6'/%3E%3Crect x='80' y='280' width='340' height='50' rx='12' fill='url(%23bg)'/%3E%3Ctext x='250' y='312' text-anchor='middle' fill='white' font-family='sans-serif' font-size='18' font-weight='bold'%3Eفريق الطوقان للبرمجيات%3C/text%3E%3C/svg%3E" alt="فريق الطوقان">
-                    <div class="about-image-accent"></div>
-                </div>
-                <div class="about-content fade-up">
-                    <div class="section-badge">🏢 من نحن</div>
-                    <h2>نبني المستقبل الرقمي معاً</h2>
-                    <p>فريق متخصص من المطورين والمصممين نعمل على تحويل أفكارك إلى واقع رقمي ملموس. نؤمن بأن التكنولوجيا هي مفتاح النجاح في العصر الحديث، ونسعى دائماً لتقديم أفضل الحلول.</p>
-                    <div class="about-features">
-                        <div class="about-feature">
-                            <div class="about-feature-icon">✓</div>
-                            <div>
-                                <h4>خبرة واسعة</h4>
-                                <p>+8 سنوات في السوق</p>
-                            </div>
-                        </div>
-                        <div class="about-feature">
-                            <div class="about-feature-icon">✓</div>
-                            <div>
-                                <h4>فريق محترف</h4>
-                                <p>+30 مطور ومصمم</p>
-                            </div>
-                        </div>
-                        <div class="about-feature">
-                            <div class="about-feature-icon">✓</div>
-                            <div>
-                                <h4>دعم مستمر</h4>
-                                <p>24/7 خدمة العملاء</p>
-                            </div>
-                        </div>
-                        <div class="about-feature">
-                            <div class="about-feature-icon">✓</div>
-                            <div>
-                                <h4>جودة عالية</h4>
-                                <p>معايير عالمية</p>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#contact" class="btn-primary">تعرف علينا أكثر ←</a>
-                </div>
-            </div>
+        <div class="table-actions">
+          <button class="table-btn danger" onclick="clearInvoice()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>
+            مسح
+          </button>
         </div>
-    </section>
-
-    <!-- Services -->
-    <section class="section" id="services">
-        <div class="container">
-            <div class="section-header fade-up">
-                <div class="section-badge">⚡ خدماتنا</div>
-                <h2 class="section-title">حلول تقنية متكاملة</h2>
-                <p class="section-desc">نقدم مجموعة شاملة من الخدمات التقنية المصممة خصيصاً لتلبية احتياجات عملك وتحقيق أهدافك</p>
-            </div>
-            <div class="services-grid">
-                <div class="service-card fade-up">
-                    <div class="service-icon">💻</div>
-                    <h3>تطوير المواقع</h3>
-                    <p>نطور مواقع ويب متجاوبة وحديثة باستخدام أحدث التقنيات لضمان أفضل تجربة مستخدم وأداء عالي</p>
-                </div>
-                <div class="service-card fade-up">
-                    <div class="service-icon">📱</div>
-                    <h3>تطبيقات الجوال</h3>
-                    <p>نطور تطبيقات جوال native و cross-platform لأنظمة iOS و Android بأعلى معايير الجودة</p>
-                </div>
-                <div class="service-card fade-up">
-                    <div class="service-icon">🤖</div>
-                    <h3>الذكاء الاصطناعي</h3>
-                    <p>حلول ذكاء اصطناعي متقدمة تشمل التعلم الآلي، معالجة اللغة الطبيعية، والرؤية الحاسوبية</p>
-                </div>
-                <div class="service-card fade-up">
-                    <div class="service-icon">🛡️</div>
-                    <h3>الأمن السيبراني</h3>
-                    <p>حلول أمنية شاملة لحماية بياناتك وأنظمتك من التهديدات الإلكترونية المتقدمة</p>
-                </div>
-                <div class="service-card fade-up">
-                    <div class="service-icon">☁️</div>
-                    <h3>الحوسبة السحابية</h3>
-                    <p>حلول سحابية متكاملة تشمل الاستضافة، التخزين، وإدارة البنية التحتية السحابية</p>
-                </div>
-                <div class="service-card fade-up">
-                    <div class="service-icon">📊</div>
-                    <h3>تحليل البيانات</h3>
-                    <p>تحليل البيانات وإنشاء تقارير تفاعلية ولوحات معلومات لاتخاذ قرارات ذكية</p>
-                </div>
-            </div>
+      </div>
+      <div class="table-wrapper" id="tableWrapper">
+        <div class="empty-state" id="emptyState">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+          <p>لا توجد منتجات</p>
+          <span class="hint">اضغط Num 1-0 لإضافة سريعة أو F1 للأصناف</span>
         </div>
-    </section>
+        <table class="product-table" id="productTable" style="display:none;">
+          <thead>
+            <tr>
+              <th style="width:36px">#</th>
+              <th>المنتج</th>
+              <th style="width:100px">الكمية</th>
+              <th style="width:90px">السعر</th>
+              <th style="width:80px">خصم%</th>
+              <th style="width:100px">الإجمالي</th>
+              <th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-    <!-- Stats -->
-    <section class="stats-section">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item fade-up">
-                    <div class="stat-number" data-count="150">0</div>
-                    <div class="stat-label">مشروع مكتمل</div>
-                </div>
-                <div class="stat-item fade-up">
-                    <div class="stat-number" data-count="50">0</div>
-                    <div class="stat-label">عميل سعيد</div>
-                </div>
-                <div class="stat-item fade-up">
-                    <div class="stat-number" data-count="8">0</div>
-                    <div class="stat-label">سنوات خبرة</div>
-                </div>
-                <div class="stat-item fade-up">
-                    <div class="stat-number" data-count="30">0</div>
-                    <div class="stat-label">عضو في الفريق</div>
-                </div>
-            </div>
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <!-- Invoice Summary -->
+    <div class="invoice-card">
+      <div class="invoice-card-header">
+        <div class="invoice-card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg> ملخص الفاتورة</div>
+        <div class="invoice-number" id="invoiceNumber">#0001</div>
+      </div>
+      <div class="invoice-body">
+        <div class="invoice-row"><span class="invoice-label">المجموع</span><span class="invoice-value" id="subtotal">0.00 د.ل</span></div>
+        <div class="invoice-row discount"><span class="invoice-label">الخصم</span><span class="invoice-value" id="discountTotal">- 0.00 د.ل</span></div>
+        <div class="invoice-divider"></div>
+        <div class="invoice-total-row">
+          <span class="invoice-total-label">الصافي</span>
+          <span class="invoice-total-value"><span class="invoice-total-currency">د.ل</span><span id="netTotal">0.00</span></span>
         </div>
-    </section>
+      </div>
+    </div>
 
-    <!-- Portfolio -->
-    <section class="section portfolio-section" id="portfolio">
-        <div class="container">
-            <div class="section-header fade-up">
-                <div class="section-badge">🎨 أعمالنا</div>
-                <h2 class="section-title">مشاريع نفتخر بها</h2>
-                <p class="section-desc">نماذج من المشاريع التي أنجزناها بنجاح لعملائنا في مختلف القطاعات</p>
-            </div>
-            <div class="portfolio-grid">
-                <div class="portfolio-card fade-up">
-                    <div class="portfolio-image">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Cdefs%3E%3ClinearGradient id='p1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231e3a5f'/%3E%3Cstop offset='100%25' style='stop-color:%232d5a8e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23p1)' width='400' height='250'/%3E%3Crect x='30' y='20' width='340' height='40' rx='8' fill='rgba(255,255,255,0.1)'/%3E%3Crect x='30' y='80' width='160' height='150' rx='12' fill='rgba(255,255,255,0.05)'/%3E%3Crect x='210' y='80' width='160' height='70' rx='12' fill='rgba(240,123,63,0.2)'/%3E%3Crect x='210' y='165' width='160' height='65' rx='12' fill='rgba(255,255,255,0.05)'/%3E%3Ctext x='200' y='135' text-anchor='middle' fill='rgba(255,255,255,0.5)' font-family='sans-serif' font-size='14'%3Eلوحة تحكم%3C/text%3E%3C/svg%3E" alt="منصة إدارة">
-                    </div>
-                    <div class="portfolio-info">
-                        <span class="portfolio-tag">منصة ويب</span>
-                        <h3>منصة إدارة المشاريع</h3>
-                        <p>نظام متكامل لإدارة المشاريع والفرق مع لوحة تحكم تفاعلية</p>
-                    </div>
-                </div>
-                <div class="portfolio-card fade-up">
-                    <div class="portfolio-image">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Cdefs%3E%3ClinearGradient id='p2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f07b3f'/%3E%3Cstop offset='100%25' style='stop-color:%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23p2)' width='400' height='250'/%3E%3Crect x='120' y='15' width='160' height='220' rx='20' fill='rgba(255,255,255,0.15)'/%3E%3Crect x='135' y='30' width='130' height='190' rx='8' fill='rgba(255,255,255,0.1)'/%3E%3Crect x='145' y='45' width='110' height='60' rx='8' fill='rgba(255,255,255,0.1)'/%3E%3Crect x='145' y='115' width='50' height='50' rx='8' fill='rgba(255,255,255,0.08)'/%3E%3Crect x='205' y='115' width='50' height='50' rx='8' fill='rgba(255,255,255,0.08)'/%3E%3Crect x='145' y='175' width='110' height='30' rx='8' fill='rgba(255,255,255,0.15)'/%3E%3Ctext x='200' y='200' text-anchor='middle' fill='rgba(255,255,255,0.6)' font-family='sans-serif' font-size='11'%3Eتطبيق جوال%3C/text%3E%3C/svg%3E" alt="تطبيق توصيل">
-                    </div>
-                    <div class="portfolio-info">
-                        <span class="portfolio-tag">تطبيق جوال</span>
-                        <h3>تطبيق توصيل الطلبات</h3>
-                        <p>تطبيق متكامل لتوصيل الطلبات مع تتبع مباشر ونظام تقييم</p>
-                    </div>
-                </div>
-                <div class="portfolio-card fade-up">
-                    <div class="portfolio-image">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Cdefs%3E%3ClinearGradient id='p3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230d1b2a'/%3E%3Cstop offset='100%25' style='stop-color:%231e3a5f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23p3)' width='400' height='250'/%3E%3Ccircle cx='200' cy='125' r='60' fill='none' stroke='rgba(240,123,63,0.3)' stroke-width='4'/%3E%3Ccircle cx='200' cy='125' r='40' fill='none' stroke='rgba(240,123,63,0.5)' stroke-width='3'/%3E%3Ccircle cx='200' cy='125' r='20' fill='rgba(240,123,63,0.2)'/%3E%3Ctext x='200' y='130' text-anchor='middle' fill='rgba(255,255,255,0.7)' font-family='sans-serif' font-size='12'%3EAI%3C/text%3E%3Crect x='30' y='30' width='100' height='6' rx='3' fill='rgba(74,222,128,0.4)'/%3E%3Crect x='270' y='30' width='100' height='6' rx='3' fill='rgba(240,123,63,0.4)'/%3E%3Crect x='30' y='214' width='100' height='6' rx='3' fill='rgba(245,166,35,0.4)'/%3E%3Crect x='270' y='214' width='100' height='6' rx='3' fill='rgba(74,222,128,0.4)'/%3E%3C/svg%3E" alt="ذكاء اصطناعي">
-                    </div>
-                    <div class="portfolio-info">
-                        <span class="portfolio-tag">ذكاء اصطناعي</span>
-                        <h3>نظام تحليل البيانات</h3>
-                        <p>نظام ذكاء اصطناعي لتحليل البيانات وتقديم توقعات دقيقة</p>
-                    </div>
-                </div>
-            </div>
+    <!-- Customer -->
+    <div class="customer-card">
+      <div class="customer-card-header">
+        <div class="customer-card-title"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> العميل</div>
+        <button class="add-customer-btn" onclick="openModal('addCustomerModal')">+ عميل جديد</button>
+      </div>
+      <div class="customer-card-body">
+        <div class="customer-search">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="بحث..." id="customerSearch" oninput="filterCustomers(this.value)">
         </div>
-    </section>
-
-    <!-- Contact -->
-    <section class="section contact-section" id="contact">
-        <div class="container">
-            <div class="section-header fade-up">
-                <div class="section-badge">📬 تواصل معنا</div>
-                <h2 class="section-title">ابدأ مشروعك معنا اليوم</h2>
-                <p class="section-desc">نحن هنا لمساعدتك في تحويل أفكارك إلى واقع. تواصل معنا الآن!</p>
-            </div>
-            <div class="contact-grid">
-                <div class="contact-info fade-up">
-                    <h3>معلومات التواصل</h3>
-                    <p>لا تتردد في التواصل معنا في أي وقت. فريقنا جاهز لمساعدتك والإجابة على جميع استفساراتك.</p>
-                    
-                    <div class="contact-item">
-                        <div class="contact-item-icon">📍</div>
-                        <div>
-                            <h4>العنوان</h4>
-                            <p>الرياض، المملكة العربية السعودية</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-item-icon">📧</div>
-                        <div>
-                            <h4>البريد الإلكتروني</h4>
-                            <p>info@touqan.sa</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-item-icon">📞</div>
-                        <div>
-                            <h4>الهاتف</h4>
-                            <p dir="ltr">+966 50 123 4567</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-item-icon">⏰</div>
-                        <div>
-                            <h4>ساعات العمل</h4>
-                            <p>الأحد - الخميس: 9 ص - 6 م</p>
-                        </div>
-                    </div>
-                </div>
-
-                <form class="contact-form fade-up" id="contactForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>الاسم الكامل</label>
-                            <input type="text" placeholder="أدخل اسمك" required>
-                        </div>
-                        <div class="form-group">
-                            <label>البريد الإلكتروني</label>
-                            <input type="email" placeholder="example@email.com" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>رقم الهاتف</label>
-                            <input type="tel" placeholder="05xxxxxxxx">
-                        </div>
-                        <div class="form-group">
-                            <label>نوع الخدمة</label>
-                            <select>
-                                <option value="">اختر الخدمة</option>
-                                <option>تطوير مواقع</option>
-                                <option>تطبيقات جوال</option>
-                                <option>ذكاء اصطناعي</option>
-                                <option>أمن سيبراني</option>
-                                <option>حوسبة سحابية</option>
-                                <option>أخرى</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>رسالتك</label>
-                        <textarea placeholder="اكتب تفاصيل مشروعك هنا..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn-submit">إرسال الرسالة ✉️</button>
-                </form>
-            </div>
+        <div class="customer-dropdown" onclick="toggleCustomerSelect()">
+          <div class="customer-info">
+            <div class="customer-avatar" id="customerAvatar">ع</div>
+            <div class="customer-details"><h4 id="customerName">عميل عام</h4><span id="customerPhone">بدون رقم</span></div>
+          </div>
+          <div class="customer-balance"><div class="label">الرصيد</div><div class="amount" id="customerBalance">0.00 د.ل</div></div>
         </div>
-    </section>
+        <div id="customerList" style="display:none; max-height:100px; overflow-y:auto; margin-top:6px; border:1px solid var(--gray-200); border-radius:8px;"></div>
+      </div>
+    </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-about">
-                    <a href="#home" class="logo">
-                        <div class="logo-icon">ط</div>
-                        <div>
-                            <div class="logo-title">الطوقان</div>
-                            <div class="logo-subtitle">للبرمجيات</div>
-                        </div>
-                    </a>
-                    <p>شركة سعودية متخصصة في تطوير الحلول البرمجية المتكاملة. نسعى لتقديم أفضل الخدمات التقنية لعملائنا في جميع أنحاء المنطقة.</p>
-                    <div class="footer-social">
-                        <a href="#" aria-label="تويتر">𝕏</a>
-                        <a href="#" aria-label="لينكدإن">in</a>
-                        <a href="#" aria-label="انستغرام">📷</a>
-                        <a href="#" aria-label="يوتيوب">▶</a>
-                    </div>
-                </div>
-                <div>
-                    <h4>روابط سريعة</h4>
-                    <ul class="footer-links">
-                        <li><a href="#home">الرئيسية</a></li>
-                        <li><a href="#about">من نحن</a></li>
-                        <li><a href="#services">خدماتنا</a></li>
-                        <li><a href="#portfolio">أعمالنا</a></li>
-                        <li><a href="#contact">تواصل معنا</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>خدماتنا</h4>
-                    <ul class="footer-links">
-                        <li><a href="#">تطوير المواقع</a></li>
-                        <li><a href="#">تطبيقات الجوال</a></li>
-                        <li><a href="#">الذكاء الاصطناعي</a></li>
-                        <li><a href="#">الأمن السيبراني</a></li>
-                        <li><a href="#">الحوسبة السحابية</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>تواصل معنا</h4>
-                    <ul class="footer-links">
-                        <li><a href="mailto:info@touqan.sa">info@touqan.sa</a></li>
-                        <li><a href="tel:+966501234567">+966 50 123 4567</a></li>
-                        <li><a href="#">الرياض، السعودية</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>© 2024 الطوقان للبرمجيات. جميع الحقوق محفوظة.</p>
-            </div>
+    <!-- Compact Payment -->
+    <div class="payment-section">
+      <div class="payment-header">
+        <span>طريقة الدفع</span>
+        <button onclick="openPaymentModal()" style="background:var(--primary); color:white; border:none; padding:5px 12px; border-radius:var(--radius-sm); font-family:'Tajawal'; font-size:11px; font-weight:700; cursor:pointer;">ادفع الآن</button>
+      </div>
+      <div class="payment-methods-row">
+        <button class="pay-method-btn cash" onclick="selectPayment('cash')" id="payBtnCash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          <span>نقدي</span><span class="sub">F6</span>
+        </button>
+        <button class="pay-method-btn card" onclick="selectPayment('card')" id="payBtnCard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          <span>بطاقة</span><span class="sub">F7</span>
+        </button>
+        <button class="pay-method-btn transfer" onclick="selectPayment('transfer')" id="payBtnTransfer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/></svg>
+          <span>تحويل</span><span class="sub">F8</span>
+        </button>
+        <button class="pay-method-btn multi" onclick="selectPayment('multi')" id="payBtnMulti">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="8" height="10" rx="1"/><rect x="14" y="7" width="8" height="10" rx="1"/></svg>
+          <span>متعدد</span><span class="sub">F9</span>
+        </button>
+      </div>
+      <div class="payment-info" id="paymentInfo" style="display:none;">
+        <div class="payment-info-row"><span class="payment-info-label">الطريقة</span><span class="payment-info-value" id="payMethodLabel">-</span></div>
+        <div class="payment-info-row"><span class="payment-info-label">المبلغ المدفوع</span><span class="payment-info-value" id="payMethodAmount">0.00 د.ل</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Bar -->
+<div class="bottom-bar">
+  <div class="action-group">
+    <button class="action-btn management" onclick="openProductsModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      الأصناف<span class="shortcut">F1</span>
+    </button>
+    <button class="action-btn management" onclick="showToast('إدارة المعاملات','info')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+      المعاملات<span class="shortcut">F5</span>
+    </button>
+    <button class="action-btn management" onclick="showToast('إعدادات النظام','info')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09"/></svg>
+      الإعدادات<span class="shortcut">F10</span>
+    </button>
+  </div>
+  <div class="action-divider"></div>
+  <div class="action-group">
+    <button class="action-btn danger-action" onclick="clearInvoice()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>
+      مسح<span class="shortcut">F4</span>
+    </button>
+    <button class="action-btn danger-action" onclick="showToast('صفحة المرتجعات','info')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      مرتجع<span class="shortcut">F11</span>
+    </button>
+  </div>
+  <div style="flex:1"></div>
+  <div class="action-group">
+    <button class="action-btn quick-pay" onclick="quickPay()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      دفع سريع<span class="shortcut">F12</span>
+    </button>
+    <button class="action-btn pay" onclick="openPaymentModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      ادفع الآن
+    </button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Products Modal -->
+<div class="products-modal-overlay" id="productsModal">
+  <div class="products-modal">
+    <div class="products-modal-header">
+      <div class="products-modal-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        اختيار الأصناف
+      </div>
+      <button class="products-modal-close" onclick="closeProductsModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="products-search-bar">
+      <div class="products-search-wrapper">
+        <svg class="products-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="products-search-input" id="productsSearchInput" placeholder="ابحث عن منتج بالاسم أو الباركود..." oninput="filterProducts(this.value)">
+      </div>
+    </div>
+    <div class="category-filters" id="categoryFilters"></div>
+    <div class="products-grid-wrapper">
+      <div class="products-grid" id="productsGrid"></div>
+    </div>
+    <div class="products-footer">
+      <span class="products-count" id="productsCount">0 منتج</span>
+      <span class="products-hint">اضغط على المنتج لإضافته أو استخدم Num 1-0</span>
+    </div>
+  </div>
+</div>
+
+<!-- Add Customer Modal -->
+<div class="modal-overlay" id="addCustomerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">إضافة عميل جديد</div>
+      <button class="modal-close" onclick="closeModal('addCustomerModal')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">اسم العميل</label><input type="text" class="form-input" id="newCustomerName" placeholder="أدخل اسم العميل"></div>
+      <div class="form-group"><label class="form-label">رقم الهاتف</label><input type="text" class="form-input" id="newCustomerPhone" placeholder="09XXXXXXXX" dir="ltr"></div>
+      <div class="form-group"><label class="form-label">العنوان (اختياري)</label><input type="text" class="form-input" id="newCustomerAddress" placeholder="العنوان"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn primary" onclick="addCustomer()">حفظ</button>
+      <button class="modal-btn secondary" onclick="closeModal('addCustomerModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="success-modal-overlay" id="successModal">
+  <div class="success-modal-box">
+    <div class="success-icon-big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2>تم الدفع بنجاح!</h2>
+    <p>تم إتمام عملية الدفع</p>
+    <div class="success-amount" id="successAmount">0.00 د.ل</div>
+    <div class="inv-num">رقم الفاتورة: <span id="successInvoiceNum">#0001</span></div>
+    <div class="success-modal-footer"><button class="success-modal-btn" onclick="closeSuccessModal()">فاتورة جديدة</button></div>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="payment-modal-overlay" id="paymentModal">
+  <div class="payment-modal">
+    <div class="payment-modal-header">
+      <div class="payment-modal-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        الدفع
+      </div>
+      <button class="payment-modal-close" onclick="closePaymentModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="payment-modal-body">
+      <!-- Currency Side -->
+      <div class="payment-currency-side">
+        <div class="currency-section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          عملات نقدية - أضف للفاتورة
         </div>
-    </footer>
+        <div class="bills-grid" id="billsGrid"></div>
+        <div class="currency-section-title" style="margin-top:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg>
+          عملات معدنية
+        </div>
+        <div class="coins-grid" id="coinsGrid"></div>
+        <button class="exact-btn" onclick="exactPayment()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          دقيق (المبلغ بالضبط)
+        </button>
+      </div>
+      <!-- Payment Details Side -->
+      <div class="payment-details-side">
+        <div class="payment-total-section">
+          <div class="payment-total-label">الإجمالي المستحق:</div>
+          <input type="text" class="payment-total-input" id="paymentTotalInput" readonly>
+        </div>
+        <div class="payment-method-select" id="payMethodSelect">
+          <button class="pay-method-option active" onclick="setPayMethod('cash')">نقدي</button>
+          <button class="pay-method-option" onclick="setPayMethod('card')">بطاقة</button>
+          <button class="pay-method-option" onclick="setPayMethod('transfer')">تحويل</button>
+          <button class="pay-method-option" onclick="setPayMethod('multi')">متعدد</button>
+        </div>
+        <div class="payment-summary-section">
+          <div class="payment-summary-row">
+            <span class="payment-summary-label">المبلغ المدفوع:</span>
+            <span class="payment-summary-value paid" id="paidAmount">0.00 د.ل</span>
+          </div>
+          <div class="payment-summary-row">
+            <span class="payment-summary-label">الباقي نقداً:</span>
+            <span class="payment-summary-value remaining" id="remainingAmount">0.00 د.ل</span>
+          </div>
+          <div class="payment-summary-row">
+            <span class="payment-summary-label">الرصيد:</span>
+            <span class="payment-summary-value change" id="changeAmount">0.00 د.ل</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="payment-modal-footer">
+      <button class="pay-modal-btn save" onclick="savePayment()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        بيع وحفظ
+      </button>
+      <button class="pay-modal-btn close" onclick="closePaymentModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        إغلاق
+      </button>
+    </div>
+  </div>
+</div>
 
-    <!-- Scroll to top -->
-    <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">↑</button>
+<script>
+// Product Database
+const productDB = {
+  '1001': { name: 'أرز بسمتي 5 كغ', price: 25.50, category: 'مواد غذائية', emoji: '🍚' },
+  '1002': { name: 'زيت زيتون 1 لتر', price: 45.00, category: 'زيوت', emoji: '🫒' },
+  '1003': { name: 'حليب طازج 1 لتر', price: 3.50, category: 'ألبان', emoji: '🥛' },
+  '1004': { name: 'خبز عربي 6 حبات', price: 2.00, category: 'مخبوزات', emoji: '🍞' },
+  '1005': { name: 'سكر أبيض 1 كغ', price: 5.50, category: 'مواد غذائية', emoji: '🧂' },
+  '1006': { name: 'شاي أخضر 100 كيس', price: 18.00, category: 'مشروبات', emoji: '🍵' },
+  '1007': { name: 'قهوة تركية 250 غ', price: 32.00, category: 'مشروبات', emoji: '☕' },
+  '1008': { name: 'عسل طبيعي 500 مل', price: 65.00, category: 'مواد غذائية', emoji: '🍯' },
+  '1009': { name: 'زبدة 200 غ', price: 12.00, category: 'ألبان', emoji: '🧈' },
+  '1010': { name: 'معجون طماطم 400 غ', price: 4.50, category: 'مواد غذائية', emoji: '🍅' },
+  '1011': { name: 'مياه معدنية 1.5 لتر', price: 1.50, category: 'مشروبات', emoji: '💧' },
+  '1012': { name: 'عصير برتقال 1 لتر', price: 8.00, category: 'مشروبات', emoji: '🧃' },
+  '1013': { name: 'جبنة بيضاء 400 غ', price: 15.00, category: 'ألبان', emoji: '🧀' },
+  '1014': { name: 'بيض 30 حبة', price: 18.00, category: 'بيض', emoji: '🥚' },
+  '1015': { name: 'دجاج طازج 1 كغ', price: 22.00, category: 'لحوم', emoji: '🍗' },
+  '1016': { name: 'سمك طازج 1 كغ', price: 35.00, category: 'أسماك', emoji: '🐟' },
+  '1017': { name: 'تفاح أحمر 1 كغ', price: 8.50, category: 'فواكه', emoji: '🍎' },
+  '1018': { name: 'موز 1 كغ', price: 6.00, category: 'فواكه', emoji: '🍌' },
+  '1019': { name: 'طماطم 1 كغ', price: 4.00, category: 'خضروات', emoji: '🍅' },
+  '1020': { name: 'بطاطس 1 كغ', price: 3.00, category: 'خضروات', emoji: '🥔' },
+  '1021': { name: 'شامبو 400 مل', price: 12.00, category: 'منظفات', emoji: '🧴' },
+  '1022': { name: 'صابون يد 500 مل', price: 8.00, category: 'منظفات', emoji: '🧼' },
+  '1023': { name: 'معجون أسنان', price: 5.00, category: 'عناية شخصية', emoji: '🪥' },
+  '1024': { name: 'مناديل ورقية', price: 7.00, category: 'ورقيات', emoji: '🧻' },
+  '1025': { name: 'معكرونة 500 غ', price: 3.50, category: 'مواد غذائية', emoji: '🍝' },
+  '1026': { name: 'منظف أرضيات', price: 15.00, category: 'منظفات', emoji: '🧹' },
+  '1027': { name: 'مسحوق غسيل', price: 18.00, category: 'منظفات', emoji: '🧺' },
+  '1028': { name: 'معطر جو', price: 10.00, category: 'عناية شخصية', emoji: '🌸' },
+  '1029': { name: 'شمعة عطرية', price: 9.00, category: 'عناية شخصية', emoji: '🕯️' },
+  '1030': { name: 'ملح 1 كغ', price: 2.50, category: 'مواد غذائية', emoji: '🧂' },
+};
 
-    <!-- Toast -->
-    <div class="toast" id="toast">✅ تم إرسال رسالتك بنجاح!</div>
+// Currency images
+const billImages = {
+  '50': 'https://image.qwenlm.ai/public_source/878c30ff-1140-405f-a280-2a1e3d6f2779/1da94e0e2-72f7-4f62-96f2-e7eb50915fc8.png',
+  '20': 'https://image.qwenlm.ai/public_source/878c30ff-1140-405f-a280-2a1e3d6f2779/1753304a9-feae-4468-8810-0a1a5dd95cd3.png',
+  '10': 'https://image.qwenlm.ai/public_source/878c30ff-1140-405f-a280-2a1e3d6f2779/14fda9412-c0db-48e0-afb2-4dbb75a6679e.png',
+  '5': 'https://image.qwenlm.ai/public_source/878c30ff-1140-405f-a280-2a1e3d6f2779/1402b81a3-40d6-461b-b011-e257b4c75019.png'
+};
 
-    <script>
-        // Particles
-        (function() {
-            var container = document.getElementById('particles');
-            if (!container) return;
-            for (var i = 0; i < 30; i++) {
-                var p = document.createElement('div');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDuration = (8 + Math.random() * 12) + 's';
-                p.style.animationDelay = Math.random() * 10 + 's';
-                p.style.width = (2 + Math.random() * 4) + 'px';
-                p.style.height = p.style.width;
-                container.appendChild(p);
-            }
-        })();
+const coinImages = {
+  '1': 'https://image.qwenlm.ai/public_source/878c30ff-1140-405f-a280-2a1e3d6f2779/11ce2fbcc-dfec-4be4-b8b9-bfb4b168a7ea.png',
+  '0.5': 'https://image.qwenlm.ai/public_source/878c30ff-1140-405f-a280-2a1e3d6f2779/1b3975cec-dd45-4a57-9207-fc0a55f171a7.png',
+  '0.25': 'https://image.qwenlm.ai/public_source/878c30ff-1140-405f-a280-2a1e3d6f2779/1316690ac-7069-4271-a511-fb1b4f526a20.png'
+};
 
-        // Navbar scroll
-        var navbar = document.getElementById('navbar');
-        var scrollTopBtn = document.getElementById('scrollTop');
+// State
+let invoiceItems = [];
+let currentPaymentMethod = null;
+let invoiceCounter = 1;
+let selectedCustomer = { name: 'عميل عام', phone: 'بدون رقم', balance: 0, avatar: 'ع' };
+let customerList = [
+  { name: 'عميل عام', phone: 'بدون رقم', balance: 0, avatar: 'ع' },
+  { name: 'محمد علي', phone: '0912345678', balance: 120.50, avatar: 'م' },
+  { name: 'سارة أحمد', phone: '0923456789', balance: 0, avatar: 'س' },
+  { name: 'خالد عمر', phone: '0934567890', balance: 350.00, avatar: 'خ' },
+  { name: 'فاطمة يوسف', phone: '0945678901', balance: 80.25, avatar: 'ف' },
+  { name: 'عبدالله حسن', phone: '0956789012', balance: 200.00, avatar: 'ع' },
+  { name: 'نورة سالم', phone: '0967890123', balance: 0, avatar: 'ن' },
+];
 
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 80) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-            if (window.scrollY > 400) {
-                scrollTopBtn.classList.add('visible');
-            } else {
-                scrollTopBtn.classList.remove('visible');
-            }
-        });
+const quickItems = ['1001', '1003', '1004', '1005', '1006', '1007', '1011', '1014', '1015', '1017'];
+const quickKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 
-        scrollTopBtn.addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+// Payment state
+let currentPaidAmount = 0;
+let currentPayMethod = 'cash';
 
-        // Mobile menu
-        var mobileMenu = document.getElementById('mobileMenu');
-        var menuOverlay = document.getElementById('menuOverlay');
-        var menuToggle = document.getElementById('menuToggle');
-        var menuClose = document.getElementById('menuClose');
-        var mobileLinks = document.querySelectorAll('.mobile-link');
+// Audio
+let audioCtx = null;
+function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
-        function openMenu() {
-            mobileMenu.classList.add('active');
-            menuOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+function playBeep(freq = 800, dur = 100) {
+  try {
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.frequency.value = freq; osc.type = 'sine';
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur / 1000);
+    osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + dur / 1000);
+  } catch(e) {}
+}
 
-        function closeMenuFn() {
-            mobileMenu.classList.remove('active');
-            menuOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
+function playSuccessSound() {
+  try {
+    initAudio();
+    [0, 100, 200].forEach((delay, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.value = [523, 659, 784][i]; osc.type = 'sine';
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime + delay/1000);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + delay/1000 + 0.2);
+      osc.start(audioCtx.currentTime + delay/1000); osc.stop(audioCtx.currentTime + delay/1000 + 0.2);
+    });
+  } catch(e) {}
+}
 
-        menuToggle.addEventListener('click', openMenu);
-        menuClose.addEventListener('click', closeMenuFn);
-        menuOverlay.addEventListener('click', closeMenuFn);
-        mobileLinks.forEach(function(link) {
-            link.addEventListener('click', closeMenuFn);
-        });
+function playErrorSound() { playBeep(250, 200); }
 
-        // Scroll animations
-        var fadeElements = document.querySelectorAll('.fade-up');
+// DateTime
+function updateDateTime() {
+  const now = new Date();
+  document.getElementById('headerTime').textContent = now.toLocaleTimeString('ar-LY', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  document.getElementById('headerDateText').textContent = now.toLocaleDateString('ar-LY', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+updateDateTime();
+setInterval(updateDateTime, 1000);
 
-        function checkFade() {
-            fadeElements.forEach(function(el) {
-                var rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 80) {
-                    el.classList.add('visible');
-                }
-            });
-        }
+// Quick Items
+function renderQuickItems() {
+  document.getElementById('quickItemsGrid').innerHTML = quickItems.map((code, idx) => {
+    const p = productDB[code];
+    if (!p) return '';
+    return `<button class="quick-item-btn" onclick="addByCode('${code}')" title="${p.name}">
+      <span class="key">${quickKeys[idx]}</span>
+      <span class="emoji">${p.emoji}</span>
+      <span class="name">${p.name}</span>
+      <span class="price">${p.price.toFixed(2)} د.ل</span>
+    </button>`;
+  }).join('');
+}
 
-        window.addEventListener('scroll', checkFade);
-        window.addEventListener('load', checkFade);
+function getCategoryColor(cat) {
+  const colors = { 'مواد غذائية': '#FFF3E0', 'زيوت': '#FFF8E1', 'ألبان': '#E3F2FD', 'مخبوزات': '#FBE9E7', 'مشروبات': '#E0F7FA', 'لحوم': '#FFEBEE', 'أسماك': '#E8F5E9', 'فواكه': '#FFF3E0', 'خضروات': '#E8F5E9', 'بيض': '#FFFDE7', 'منظفات': '#F3E5F5', 'عناية شخصية': '#FCE4EC', 'ورقيات': '#FFF8E1' };
+  return colors[cat] || '#F5F5F5';
+}
 
-        // Counter animation
-        var countersAnimated = false;
+// Barcode
+const barcodeInput = document.getElementById('barcodeInput');
+let scanTimeout;
 
-        function animateCounters() {
-            if (countersAnimated) return;
-            var statsSection = document.querySelector('.stats-section');
-            if (!statsSection) return;
-            var rect = statsSection.getBoundingClientRect();
-            if (rect.top < window.innerHeight - 100) {
-                countersAnimated = true;
-                var counters = document.querySelectorAll('.stat-number[data-count]');
-                counters.forEach(function(counter) {
-                    var target = parseInt(counter.getAttribute('data-count'));
-                    var duration = 2000;
-                    var start = 0;
-                    var startTime = null;
+barcodeInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const val = this.value.trim();
+    if (val) { handleBarcodeScan(val); this.value = ''; }
+  }
+});
 
-                    function updateCounter(timestamp) {
-                        if (!startTime) startTime = timestamp;
-                        var progress = Math.min((timestamp - startTime) / duration, 1);
-                        var easeOut = 1 - Math.pow(1 - progress, 3);
-                        counter.textContent = Math.floor(easeOut * target) + '+';
-                        if (progress < 1) {
-                            requestAnimationFrame(updateCounter);
-                        }
-                    }
-                    requestAnimationFrame(updateCounter);
-                });
-            }
-        }
+let isModalOpen = false;
 
-        window.addEventListener('scroll', animateCounters);
+function handleBarcodeScan(code) {
+  const section = document.getElementById('barcodeSection');
+  const status = document.getElementById('barcodeStatus');
+  section.classList.add('scanning');
+  status.className = 'barcode-status scanning';
+  status.textContent = 'جاري المسح...';
+  clearTimeout(scanTimeout);
+  scanTimeout = setTimeout(() => {
+    section.classList.remove('scanning');
+    status.className = 'barcode-status ready';
+    status.textContent = 'جاهز';
+    const product = productDB[code];
+    if (product) { playBeep(1000, 80); addToInvoice(code, product); showToast(`تم إضافة: ${product.name}`, 'success'); }
+    else { playErrorSound(); showToast(`المنتج غير موجود: ${code}`, 'error'); }
+  }, 300);
+}
 
-        // Contact form
-        var contactForm = document.getElementById('contactForm');
-        var toast = document.getElementById('toast');
+document.addEventListener('click', function(e) {
+  if (!isModalOpen && !e.target.closest('input, textarea, select, button, .modal-overlay') &&
+      !e.target.closest('.qty-btn') && !e.target.closest('.remove-btn') &&
+      !e.target.closest('.qty-input') && !e.target.closest('.discount-input') &&
+      !e.target.closest('.customer-dropdown') && !e.target.closest('#customerList')) {
+    barcodeInput.focus();
+  }
+});
 
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            toast.classList.add('show');
-            contactForm.reset();
-            setTimeout(function() {
-                toast.classList.remove('show');
-            }, 3500);
-        });
+// Products Modal
+let activeCategory = 'الكل';
+let allProductCodes = Object.keys(productDB);
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
-            anchor.addEventListener('click', function(e) {
-                var targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                var targetEl = document.querySelector(targetId);
-                if (targetEl) {
-                    e.preventDefault();
-                    targetEl.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-    </script>
+function openProductsModal() {
+  document.getElementById('productsModal').classList.add('active');
+  isModalOpen = true;
+  renderCategories();
+  renderProductsGrid(allProductCodes);
+  setTimeout(() => document.getElementById('productsSearchInput').focus(), 200);
+}
+
+function closeProductsModal() {
+  document.getElementById('productsModal').classList.remove('active');
+  isModalOpen = false;
+  barcodeInput.focus();
+}
+
+function renderCategories() {
+  const categories = ['الكل', ...new Set(allProductCodes.map(c => productDB[c].category))];
+  document.getElementById('categoryFilters').innerHTML = categories.map(cat =>
+    `<button class="category-btn ${cat === activeCategory ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat}</button>`
+  ).join('');
+}
+
+function filterByCategory(cat) {
+  activeCategory = cat;
+  renderCategories();
+  const codes = cat === 'الكل' ? allProductCodes : allProductCodes.filter(c => productDB[c].category === cat);
+  renderProductsGrid(codes);
+}
+
+function renderProductsGrid(codes) {
+  const grid = document.getElementById('productsGrid');
+  const count = document.getElementById('productsCount');
+  if (codes.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--gray-400);"><p style="font-size:15px; font-weight:600;">لا توجد نتائج</p></div>';
+    count.textContent = '0 منتج';
+    return;
+  }
+  grid.innerHTML = codes.map(code => {
+    const p = productDB[code];
+    return `<div class="product-card" onclick="addProductFromModal('${code}')">
+      <span class="category-tag">${p.category}</span>
+      <span class="emoji">${p.emoji}</span>
+      <span class="name">${p.name}</span>
+      <span class="price">${p.price.toFixed(2)} د.ل</span>
+      <span class="code">${code}</span>
+    </div>`;
+  }).join('');
+  count.textContent = `${codes.length} منتج`;
+}
+
+function filterProducts(query) {
+  query = query.toLowerCase().trim();
+  if (!query) {
+    const codes = activeCategory === 'الكل' ? allProductCodes : allProductCodes.filter(c => productDB[c].category === activeCategory);
+    renderProductsGrid(codes); return;
+  }
+  const codes = allProductCodes.filter(code => {
+    const p = productDB[code];
+    const catMatch = activeCategory === 'الكل' || p.category === activeCategory;
+    return catMatch && (p.name.toLowerCase().includes(query) || code.includes(query) || p.category.includes(query));
+  });
+  renderProductsGrid(codes);
+}
+
+function addProductFromModal(code) {
+  const product = productDB[code];
+  if (!product) return;
+  playBeep(900, 80);
+  addToInvoice(code, product);
+  showToast(`تم إضافة: ${product.name}`, 'success');
+}
+
+function addByCode(code) {
+  const product = productDB[code];
+  if (!product) return;
+  playBeep(1000, 80);
+  addToInvoice(code, product);
+  showToast(`تم إضافة: ${product.name}`, 'success');
+}
+
+function addToInvoice(code, product) {
+  const existing = invoiceItems.find(item => item.code === code);
+  if (existing) {
+    existing.qty += 1;
+    existing.total = existing.qty * existing.price * (1 - existing.discount / 100);
+  } else {
+    invoiceItems.push({ id: Date.now() + Math.random(), code, name: product.name, emoji: product.emoji, price: product.price, qty: 1, discount: 0, total: product.price });
+  }
+  renderTable(); updateSummary();
+  const row = document.querySelector(`tr[data-code="${code}"]`);
+  if (row) { row.classList.add('scanned'); setTimeout(() => row.classList.remove('scanned'), 500); row.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+}
+
+function renderTable() {
+  const tbody = document.getElementById('productTableBody');
+  const table = document.getElementById('productTable');
+  const empty = document.getElementById('emptyState');
+  document.getElementById('itemCount').textContent = invoiceItems.length;
+  if (invoiceItems.length === 0) { table.style.display = 'none'; empty.style.display = 'flex'; return; }
+  table.style.display = 'table'; empty.style.display = 'none';
+  tbody.innerHTML = invoiceItems.map((item, idx) => `
+    <tr data-code="${item.code}" data-id="${item.id}" class="${idx === invoiceItems.length - 1 ? 'selected' : ''}">
+      <td style="font-weight:700; color:var(--gray-400); font-size:11px;">${idx + 1}</td>
+      <td><div class="product-name-cell">
+        <div class="product-thumb" style="background:${getCategoryColor(productDB[item.code]?.category)}">${item.emoji}</div>
+        <div class="product-name-info"><span class="product-name">${item.name}</span><span class="product-code">${item.code}</span></div>
+      </div></td>
+      <td><div class="qty-control">
+        <button class="qty-btn minus" onclick="changeQty(${item.id}, -1)">−</button>
+        <input type="number" class="qty-input" value="${item.qty}" min="1" onchange="setQty(${item.id}, this.value)" onfocus="this.select()">
+        <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+      </div></td>
+      <td class="price-cell">${item.price.toFixed(2)} د.ل</td>
+      <td class="discount-cell"><input type="number" class="discount-input" value="${item.discount}" min="0" max="100" onchange="setDiscount(${item.id}, this.value)" onfocus="this.select()"></td>
+      <td class="total-cell">${item.total.toFixed(2)} د.ل</td>
+      <td><button class="remove-btn" onclick="removeItem(${item.id})" title="حذف"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></td>
+    </tr>`).join('');
+}
+
+function changeQty(id, delta) {
+  const item = invoiceItems.find(i => i.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  item.total = item.qty * item.price * (1 - item.discount / 100);
+  renderTable(); updateSummary();
+  const input = document.querySelector(`tr[data-id="${id}"] .qty-input`);
+  if (input) { input.classList.add('qty-bounce'); setTimeout(() => input.classList.remove('qty-bounce'), 250); }
+}
+
+function setQty(id, value) { const item = invoiceItems.find(i => i.id === id); if (!item) return; item.qty = Math.max(1, parseInt(value) || 1); item.total = item.qty * item.price * (1 - item.discount / 100); renderTable(); updateSummary(); }
+function setDiscount(id, value) { const item = invoiceItems.find(i => i.id === id); if (!item) return; item.discount = Math.max(0, Math.min(100, parseFloat(value) || 0)); item.total = item.qty * item.price * (1 - item.discount / 100); renderTable(); updateSummary(); }
+function removeItem(id) { invoiceItems = invoiceItems.filter(i => i.id !== id); renderTable(); updateSummary(); playBeep(500, 80); }
+
+function updateSummary() {
+  const subtotal = invoiceItems.reduce((s, i) => s + (i.qty * i.price), 0);
+  const discountTotal = invoiceItems.reduce((s, i) => s + (i.qty * i.price * i.discount / 100), 0);
+  const taxable = subtotal - discountTotal;
+  document.getElementById('subtotal').textContent = `${subtotal.toFixed(2)} د.ل`;
+  document.getElementById('discountTotal').textContent = `- ${discountTotal.toFixed(2)} د.ل`;
+  document.getElementById('netTotal').textContent = taxable.toFixed(2);
+}
+
+function clearInvoice() {
+  if (invoiceItems.length === 0) return;
+  if (confirm('هل أنت متأكد من مسح جميع العناصر؟')) { invoiceItems = []; renderTable(); updateSummary(); showToast('تم مسح الفاتورة', 'info'); }
+}
+
+// Payment section
+function selectPayment(method) {
+  currentPaymentMethod = method;
+  document.querySelectorAll('.pay-method-btn').forEach(btn => btn.classList.remove('active'));
+  const map = { cash: 'payBtnCash', card: 'payBtnCard', transfer: 'payBtnTransfer', multi: 'payBtnMulti' };
+  document.getElementById(map[method]).classList.add('active');
+  const labels = { cash: 'نقدي', card: 'بطاقة', transfer: 'تحويل', multi: 'متعدد' };
+  const info = document.getElementById('paymentInfo');
+  info.style.display = 'block';
+  document.getElementById('payMethodLabel').textContent = labels[method];
+  playBeep(600, 60);
+}
+
+// Payment Modal
+function openPaymentModal() {
+  if (invoiceItems.length === 0) { showToast('لا توجد منتجات في الفاتورة', 'error'); playErrorSound(); return; }
+  document.getElementById('paymentModal').classList.add('active');
+  isModalOpen = true;
+  currentPaidAmount = 0;
+  currentPayMethod = currentPaymentMethod || 'cash';
+  renderPaymentCurrency();
+  updatePaymentSummary();
+  const net = invoiceItems.reduce((s, i) => s + i.total, 0);
+  document.getElementById('paymentTotalInput').value = `${net.toFixed(2)} د.ل`;
+  updatePayMethodButtons();
+}
+
+function closePaymentModal() {
+  document.getElementById('paymentModal').classList.remove('active');
+  isModalOpen = false;
+  barcodeInput.focus();
+}
+
+function renderPaymentCurrency() {
+  // Bills
+  const bills = [
+    { value: 50, label: 'خمسون ديناراً', color: '#4CAF50' },
+    { value: 20, label: 'عشرون ديناراً', color: '#FF9800' },
+    { value: 10, label: 'عشرة دنانير', color: '#2196F3' },
+    { value: 5, label: 'خمسة دنانير', color: '#9C27B0' }
+  ];
+
+  document.getElementById('billsGrid').innerHTML = bills.map(bill => `
+    <button class="bill-btn" onclick="addBillAmount(${bill.value})">
+      <img class="bill-img" src="${billImages[bill.value]}" alt="${bill.label}" onerror="this.style.display='none'">
+      <div class="bill-info">
+        <span class="bill-value" style="color:${bill.color}">${bill.value}</span>
+        <span class="bill-label">${bill.label}</span>
+      </div>
+    </button>
+  `).join('');
+
+  // Coins
+  const coins = [
+    { value: 1, label: '1 دينار', color: '#FFB300' },
+    { value: 0.5, label: 'نصف دينار', color: '#78909C' },
+    { value: 0.25, label: 'ربع دينار', color: '#FFB300' }
+  ];
+
+  document.getElementById('coinsGrid').innerHTML = coins.map(coin => `
+    <button class="coin-btn" onclick="addBillAmount(${coin.value})">
+      <img class="coin-img" src="${coinImages[coin.value]}" alt="${coin.label}" onerror="this.style.display='none'">
+      <span class="coin-label">${coin.value}</span>
+    </button>
+  `).join('');
+}
+
+function addBillAmount(value) {
+  currentPaidAmount += value;
+  playBeep(700, 60);
+  updatePaymentSummary();
+}
+
+function exactPayment() {
+  const net = invoiceItems.reduce((s, i) => s + i.total, 0);
+  currentPaidAmount = net;
+  playSuccessSound();
+  updatePaymentSummary();
+  showToast('المبلغ بالضبط!', 'success');
+}
+
+function updatePaymentSummary() {
+  const net = invoiceItems.reduce((s, i) => s + i.total, 0);
+  const paid = currentPaidAmount;
+  const remaining = Math.max(0, net - paid);
+  const change = Math.max(0, paid - net);
+
+  document.getElementById('paidAmount').textContent = `${paid.toFixed(2)} د.ل`;
+  document.getElementById('remainingAmount').textContent = remaining > 0 ? `${remaining.toFixed(2)} د.ل` : '0.00 د.ل';
+  document.getElementById('changeAmount').textContent = change > 0 ? `${change.toFixed(2)} د.ل` : '0.00 د.ل';
+}
+
+function setPayMethod(method) {
+  currentPayMethod = method;
+  updatePayMethodButtons();
+}
+
+function updatePayMethodButtons() {
+  document.querySelectorAll('#payMethodSelect .pay-method-option').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  const labels = { cash: 'نقدي', card: 'بطاقة', transfer: 'تحويل', multi: 'متعدد' };
+  const buttons = document.querySelectorAll('#payMethodSelect .pay-method-option');
+  const idx = ['cash', 'card', 'transfer', 'multi'].indexOf(currentPayMethod);
+  if (idx >= 0 && buttons[idx]) buttons[idx].classList.add('active');
+}
+
+function savePayment() {
+  const net = invoiceItems.reduce((s, i) => s + i.total, 0);
+  if (currentPaidAmount < net && currentPayMethod === 'cash') {
+    showToast('المبلغ المدفوع أقل من المستحق!', 'error');
+    playErrorSound();
+    return;
+  }
+
+  playSuccessSound();
+  closePaymentModal();
+
+  document.getElementById('successAmount').textContent = `${net.toFixed(2)} د.ل`;
+  document.getElementById('successInvoiceNum').textContent = `#${String(invoiceCounter).padStart(4, '0')}`;
+  document.getElementById('successModal').classList.add('active');
+  invoiceCounter++;
+  document.getElementById('invoiceNumber').textContent = `#${String(invoiceCounter).padStart(4, '0')}`;
+}
+
+function quickPay() {
+  if (invoiceItems.length === 0) { showToast('لا توجد منتجات', 'error'); playErrorSound(); return; }
+  currentPaymentMethod = 'cash';
+  selectPayment('cash');
+  openPaymentModal();
+  exactPayment();
+}
+
+function closeSuccessModal() {
+  document.getElementById('successModal').classList.remove('active');
+  invoiceItems = [];
+  renderTable(); updateSummary();
+  currentPaymentMethod = null;
+  document.querySelectorAll('.pay-method-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById('paymentInfo').style.display = 'none';
+  barcodeInput.focus();
+}
+
+// Customer
+function filterCustomers(query) {
+  const list = document.getElementById('customerList');
+  if (!query) { list.style.display = 'none'; return; }
+  const filtered = customerList.filter(c => c.name.includes(query) || c.phone.includes(query));
+  if (filtered.length > 0) {
+    list.style.display = 'block';
+    list.innerHTML = filtered.map(c => `
+      <div style="padding:8px 12px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--gray-100);" 
+           onmouseover="this.style.background='var(--primary-bg)'" onmouseout="this.style.background='white'" onclick="selectCustomer('${c.name}')">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:26px; height:26px; border-radius:50%; background:var(--primary-bg); display:flex; align-items:center; justify-content:center; color:var(--primary); font-weight:700; font-size:11px;">${c.avatar}</div>
+          <div><div style="font-size:11px; font-weight:600;">${c.name}</div><div style="font-size:9px; color:var(--gray-400);">${c.phone}</div></div>
+        </div>
+        <div style="font-size:10px; font-weight:600; color:${c.balance > 0 ? 'var(--red)' : 'var(--green)'};" dir="ltr">${c.balance.toFixed(2)}</div>
+      </div>`).join('');
+  } else { list.style.display = 'none'; }
+}
+
+function selectCustomer(name) {
+  const c = customerList.find(x => x.name === name);
+  if (!c) return;
+  selectedCustomer = c;
+  document.getElementById('customerName').textContent = c.name;
+  document.getElementById('customerPhone').textContent = c.phone;
+  document.getElementById('customerBalance').textContent = `${c.balance.toFixed(2)} د.ل`;
+  document.getElementById('customerAvatar').textContent = c.avatar;
+  document.getElementById('customerList').style.display = 'none';
+  document.getElementById('customerSearch').value = '';
+  playBeep(700, 60);
+  showToast(`تم اختيار: ${c.name}`, 'success');
+}
+
+function toggleCustomerSelect() {
+  const list = document.getElementById('customerList');
+  list.style.display = list.style.display === 'none' ? 'block' : 'none';
+}
+
+function addCustomer() {
+  const name = document.getElementById('newCustomerName').value.trim();
+  const phone = document.getElementById('newCustomerPhone').value.trim();
+  if (!name) { showToast('يرجى إدخال اسم العميل', 'error'); return; }
+  customerList.push({ name, phone: phone || 'بدون رقم', balance: 0, avatar: name.charAt(0) });
+  selectCustomer(name);
+  closeModal('addCustomerModal');
+  document.getElementById('newCustomerName').value = '';
+  document.getElementById('newCustomerPhone').value = '';
+  document.getElementById('newCustomerAddress').value = '';
+  showToast(`تم إضافة: ${name}`, 'success');
+}
+
+// Modal
+function openModal(id) { document.getElementById(id).classList.add('active'); isModalOpen = true; }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); isModalOpen = false; if (!document.querySelector('.modal-overlay.active, .products-modal-overlay.active, .payment-modal-overlay.active, .success-modal-overlay.active')) barcodeInput.focus(); }
+
+// Toast
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  const icons = {
+    success: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    error: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    info: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E88E5" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/></svg>'
+  };
+  toast.innerHTML = `${icons[type] || icons.info}<span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// Keyboard
+function toggleKeyboardHints() {
+  const hint = document.getElementById('keyboardHint');
+  hint.classList.toggle('show');
+  if (hint.classList.contains('show')) setTimeout(() => hint.classList.remove('show'), 6000);
+}
+
+document.addEventListener('keydown', function(e) {
+  const tag = e.target.tagName;
+  const isInput = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+
+  if (!isInput || e.target === barcodeInput) {
+    if (e.key === 'Enter' && e.target === barcodeInput) {
+      e.preventDefault();
+      const val = barcodeInput.value.trim();
+      if (val) { handleBarcodeScan(val); barcodeInput.value = ''; }
+      return;
+    }
+    const numIdx = quickKeys.indexOf(e.key);
+    if (numIdx !== -1 && !e.ctrlKey && !e.altKey && !e.shiftKey) {
+      if (!document.getElementById('productsSearchInput').matches(':focus') && !document.getElementById('customerSearch').matches(':focus')) {
+        e.preventDefault();
+        const code = quickItems[numIdx];
+        if (code) addByCode(code);
+        return;
+      }
+    }
+  }
+
+  if (e.key === 'F1') { e.preventDefault(); openProductsModal(); }
+  if (e.key === 'F2') { e.preventDefault(); barcodeInput.focus(); barcodeInput.select(); }
+  if (e.key === 'F4') { e.preventDefault(); clearInvoice(); }
+  if (e.key === 'F6') { e.preventDefault(); selectPayment('cash'); }
+  if (e.key === 'F7') { e.preventDefault(); selectPayment('card'); }
+  if (e.key === 'F8') { e.preventDefault(); selectPayment('transfer'); }
+  if (e.key === 'F9') { e.preventDefault(); selectPayment('multi'); }
+  if (e.key === 'F12') { e.preventDefault(); quickPay(); }
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active, .products-modal-overlay.active, .payment-modal-overlay.active, .success-modal-overlay.active').forEach(m => m.classList.remove('active'));
+    isModalOpen = false;
+    const hint = document.getElementById('keyboardHint');
+    if (hint.classList.contains('show')) hint.classList.remove('show');
+    setTimeout(() => barcodeInput.focus(), 100);
+  }
+});
+
+// Close modals on overlay click
+document.getElementById('productsModal').addEventListener('click', function(e) { if (e.target === this) closeProductsModal(); });
+document.getElementById('addCustomerModal').addEventListener('click', function(e) { if (e.target === this) closeModal('addCustomerModal'); });
+document.getElementById('paymentModal').addEventListener('click', function(e) { if (e.target === this) closePaymentModal(); });
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.customer-card')) document.getElementById('customerList').style.display = 'none';
+});
+
+// Init
+document.addEventListener('DOMContentLoaded', function() {
+  renderQuickItems();
+  barcodeInput.focus();
+});
+</script>
 </body>
 </html>
 
